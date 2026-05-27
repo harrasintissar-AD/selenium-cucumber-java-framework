@@ -33,4 +33,4 @@ After execution:
 - Screenshots: generated automatically per step
 
 ## Author
-Intissar Harras - Automation Test Engineer Portfolio Project
+Intissar Harras - Automation Test Engineer Portfolio Project"trigger ci" 
