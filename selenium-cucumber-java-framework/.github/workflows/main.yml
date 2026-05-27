@@ -6,6 +6,11 @@ on:
       - main
 
   workflow_dispatch:
+      inputs:
+        environment:
+          description: 'Test environment'
+          required: true
+          default: 'qa'
 
 jobs:
   test:
