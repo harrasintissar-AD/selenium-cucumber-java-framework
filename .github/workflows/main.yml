@@ -44,4 +44,4 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
 
       - name: Build and run tests
-        run: mvn clean test -f $GITHUB_WORKSPACE/pom.xml
+        run: mvn clean test -f $GITHUB_WORKSPACE/selenium-cucumber-java-framework/pom.xml
