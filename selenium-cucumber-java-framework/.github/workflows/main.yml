@@ -20,6 +20,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Print workspace path
+        run: echo $GITHUB_WORKSPACE
+
+      - name: Show full folder structure
+        run: |
+         ls
+         ls -R $GITHUB_WORKSPACE
+
+      - name: Find pom.xml
+        run: find $GITHUB_WORKSPACE -name pom.xml
+
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
@@ -33,4 +44,4 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
 
       - name: Build and run tests
-        run: mvn clean test -f selenium-cucumber-java-framework/selenium-cucumber-java-framework/pom.xml
+        run: mvn clean test -f $GITHUB_WORKSPACE/selenium-cucumber-java-framework/pom.xml
