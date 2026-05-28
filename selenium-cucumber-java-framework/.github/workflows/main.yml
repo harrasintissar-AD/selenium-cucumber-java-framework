@@ -47,7 +47,6 @@ jobs:
         run: mvn clean test -f $GITHUB_WORKSPACE/selenium-cucumber-java-framework/pom.xml
 
 	  - name: Debug report generation
-        if: always()
         run: |
           echo "Workspace:"
           pwd
