@@ -38,6 +38,9 @@ public class LoginSteps {
                 DriverFactory.getDriver()
                         .getCurrentUrl();
 
+        WebDriverWait wait = new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.urlContains("inventory"));
+
         Assert.assertTrue(
                 currentUrl.contains("inventory"),
                 "Login failed!");
