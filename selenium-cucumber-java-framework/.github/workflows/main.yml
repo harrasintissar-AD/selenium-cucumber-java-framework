@@ -55,12 +55,12 @@ jobs:
           find . -type d -name "target"
           ls -R
 		
-	  - name: Upload Execution Report
-	    uses: actions/upload-artifact@v4
-	    if: always()
-	    with:
-	      name: execution-report
-	      path: $GITHUB_WORKSPACE/selenium-cucumber-java-framework/target/execution-report/
+	  #- name: Upload Execution Report
+	   # uses: actions/upload-artifact@v4
+	    #if: always()
+	    #with:
+	     # name: execution-report
+	      #path: $GITHUB_WORKSPACE/selenium-cucumber-java-framework/target/execution-report/
 
 	  - name: Upload Screenshots
 	    uses: actions/upload-artifact@v4
