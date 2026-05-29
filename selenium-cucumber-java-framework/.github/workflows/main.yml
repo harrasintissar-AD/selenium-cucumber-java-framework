@@ -46,32 +46,34 @@ jobs:
       - name: Build and run tests
         run: mvn clean test -f $GITHUB_WORKSPACE/selenium-cucumber-java-framework/pom.xml
 
-	  - name: Debug report generation
+      - name: Debug report generation
+        if: always()
         run: |
           echo "Workspace:"
           pwd
           echo "Full structure:"
           find . -type d -name "execution-report"
-          find . -type d -name "target"
+          find . -type d -name "screenshots"
+          find . -type d -name "test-output"
           ls -R
-		
-	  #- name: Upload Execution Report
-	   # uses: actions/upload-artifact@v4
-	    #if: always()
-	    #with:
-	     # name: execution-report
-	      #path: $GITHUB_WORKSPACE/selenium-cucumber-java-framework/target/execution-report/
 
-	  - name: Upload Screenshots
-	    uses: actions/upload-artifact@v4
-	    if: always()
-	    with:
-	      name: screenshots
-	      path: $GITHUB_WORKSPACE/selenium-cucumber-java-framework/screenshots/
+      - name: Upload Execution Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: execution-report
+          path: ${{ github.workspace }}/selenium-cucumber-java-framework/target/execution-report/
 
-	  - name: Upload TestNG Report
-	    uses: actions/upload-artifact@v4
-	    if: always()
-	    with:
-	      name: test-output
-	      path: $GITHUB_WORKSPACE/selenium-cucumber-java-framework/test-output/
+      - name: Upload Screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screenshots
+          path: ${{ github.workspace }}/selenium-cucumber-java-framework/screenshots/
+
+      - name: Upload TestNG Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-output
+          path: ${{ github.workspace }}/selenium-cucumber-java-framework/test-output/
