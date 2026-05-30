@@ -13,60 +13,46 @@ import java.time.Duration;
 
 public class LoginSteps {
 
-    LoginPage loginPage;
+	LoginPage loginPage;
 
-    @Given("user is on SauceDemo login page")
-    public void user_is_on_sauce_demo_login_page() {
+	@Given("user is on SauceDemo login page")
+	public void user_is_on_sauce_demo_login_page() {
 
+		DriverFactory.getDriver().get("https://www.saucedemo.com/");
 
-        DriverFactory.getDriver()
-                .get("https://www.saucedemo.com/");
+		loginPage = new LoginPage(DriverFactory.getDriver());
+	}
 
-        loginPage = new LoginPage(
-                DriverFactory.getDriver());
-    }
+	@When("user enters valid username and password")
+	public void user_enters_valid_username_and_password() {
 
-    @When("user enters valid username and password")
-    public void user_enters_valid_username_and_password() {
+		loginPage.login("standard_user", "secret_sauce");
+	}
 
-        loginPage.login(
-                "standard_user",
-                "secret_sauce");
-    }
+	@Then("user should be redirected to inventory page")
+	public void user_should_be_redirected_to_inventory_page() {
 
-    @Then("user should be redirected to inventory page")
-    public void user_should_be_redirected_to_inventory_page() {
+		WebDriverWait wait = new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(10));
+		wait.until(ExpectedConditions.urlContains("inventory"));
 
-        String currentUrl =
-                DriverFactory.getDriver()
-                        .getCurrentUrl();
+		String currentUrl = DriverFactory.getDriver().getCurrentUrl();
 
-        WebDriverWait wait = new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.urlContains("inventory"));
+		Assert.assertTrue(currentUrl.contains("inventory"), "Login failed!");
+	}
 
-        Assert.assertTrue(
-                currentUrl.contains("inventory"),
-                "Login failed!");
-    }
+	@When("user enters invalid username and password")
+	public void user_enters_invalid_username_and_password() {
 
-    @When("user enters invalid username and password")
-    public void user_enters_invalid_username_and_password() {
+		loginPage.login("wrong_user", "wrong_password");
+	}
 
-        loginPage.login(
-                "wrong_user",
-                "wrong_password");
-    }
+	@Then("error message should be displayed")
+	public void error_message_should_be_displayed() {
 
-    @Then("error message should be displayed")
-    public void error_message_should_be_displayed() {
+		String actualError = loginPage.getErrorMessage();
 
-        String actualError =
-                loginPage.getErrorMessage();
+		Assert.assertTrue(actualError.contains("Username and password do not match"),
+				"Error message validation failed!");
 
-        Assert.assertTrue(
-                actualError.contains(
-                        "Username and password do not match"),
-                "Error message validation failed!");
-
-    }
+	}
 }
