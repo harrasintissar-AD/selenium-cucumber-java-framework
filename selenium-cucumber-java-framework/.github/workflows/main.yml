@@ -51,7 +51,7 @@ jobs:
         run: |
           echo "Workspace:"
           pwd
-          echo "Full structure:"
+          echo "Full Structure:"
           find . -type d -name "execution-report"
           find . -type d -name "screenshots"
           find . -type d -name "test-output"
