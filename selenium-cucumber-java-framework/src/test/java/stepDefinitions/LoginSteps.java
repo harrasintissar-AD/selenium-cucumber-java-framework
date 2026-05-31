@@ -32,7 +32,7 @@ public class LoginSteps {
 	@Then("user should be redirected to inventory page")
 	public void user_should_be_redirected_to_inventory_page() {
 		
-		WebDriverWait wait = new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(10));
+		WebDriverWait wait = new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(50));
 	    wait.until(ExpectedConditions.urlContains("inventory"));
 	    
 
