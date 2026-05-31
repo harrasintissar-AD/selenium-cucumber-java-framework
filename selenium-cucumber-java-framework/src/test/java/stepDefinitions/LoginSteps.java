@@ -14,6 +14,7 @@ import java.time.Duration;
 public class LoginSteps {
 
 	LoginPage loginPage;
+	private WebDriverWait wait;
 
 	@Given("user is on SauceDemo login page")
 	public void user_is_on_sauce_demo_login_page() {
