@@ -38,7 +38,7 @@ public class LoginSteps {
 		wait.until(ExpectedConditions.urlContains("inventory"));
 
 		String currentUrl = DriverFactory.getDriver().getCurrentUrl();
-
+		System.out.println(" The current url is :"+currentUrl);
 		Assert.assertTrue(currentUrl.contains("inventory"), "Login failed!");
 	}
 
