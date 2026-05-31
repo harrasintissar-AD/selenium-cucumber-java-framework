@@ -20,7 +20,7 @@ public class LoginSteps {
 
 		DriverFactory.getDriver().get("https://www.saucedemo.com/");
 
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		this.wait = new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(10));
 		loginPage = new LoginPage(DriverFactory.getDriver());
 	}
 
