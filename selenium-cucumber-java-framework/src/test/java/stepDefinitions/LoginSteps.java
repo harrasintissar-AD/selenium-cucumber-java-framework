@@ -7,21 +7,15 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import pages.LoginPage;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import java.time.Duration;
 
 public class LoginSteps {
 
 	LoginPage loginPage;
-	private WebDriverWait wait;
 
 	@Given("user is on SauceDemo login page")
 	public void user_is_on_sauce_demo_login_page() {
 
 		DriverFactory.getDriver().get("https://www.saucedemo.com/");
-
-		this.wait = new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(10));
 		loginPage = new LoginPage(DriverFactory.getDriver());
 	}
 
@@ -34,11 +28,7 @@ public class LoginSteps {
 	@Then("user should be redirected to inventory page")
 	public void user_should_be_redirected_to_inventory_page() {
 
-		WebDriverWait wait = new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(30));
-		wait.until(ExpectedConditions.urlContains("inventory"));
-
 		String currentUrl = DriverFactory.getDriver().getCurrentUrl();
-		System.out.println(" The current url is :"+currentUrl);
 		Assert.assertTrue(currentUrl.contains("inventory"), "Login failed!");
 	}
 
