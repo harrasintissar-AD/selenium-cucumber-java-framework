@@ -7,10 +7,6 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import pages.LoginPage;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import java.time.Duration;
-
 public class LoginSteps {
 
 	LoginPage loginPage;
@@ -32,9 +28,6 @@ public class LoginSteps {
 	@Then("user should be redirected to inventory page")
 	public void user_should_be_redirected_to_inventory_page() {
 		
-		WebDriverWait wait = new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(50));
-	    wait.until(ExpectedConditions.urlContains("inventory"));
-	    
 
 		String currentUrl = DriverFactory.getDriver().getCurrentUrl();
 
