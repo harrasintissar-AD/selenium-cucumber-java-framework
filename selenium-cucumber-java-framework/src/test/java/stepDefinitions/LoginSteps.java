@@ -29,6 +29,7 @@ public class LoginSteps {
 	public void user_should_be_redirected_to_inventory_page() {
 
 		String currentUrl = DriverFactory.getDriver().getCurrentUrl();
+		System.out.println("Current URL: " + currentUrl);
 		Assert.assertTrue(currentUrl.contains("inventory"), "Login failed!");
 	}
 
