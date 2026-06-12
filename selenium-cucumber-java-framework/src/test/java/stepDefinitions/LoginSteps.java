@@ -1,52 +1,42 @@
 package stepDefinitions;
 
-import org.testng.Assert;
-
 import driver.DriverFactory;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
+import io.cucumber.java.en.*;
+import org.testng.Assert;
 import pages.LoginPage;
+import utils.ConfigReader;
+import utils.TestUserStorage;
+
 public class LoginSteps {
 
-	LoginPage loginPage;
+	private LoginPage loginPage = new LoginPage(DriverFactory.getDriver());
 
-	@Given("user is on SauceDemo login page")
-	public void user_is_on_sauce_demo_login_page() {
+	@Given("user is on Parabank login page")
+	public void userIsOnLoginPage() {
 
-		DriverFactory.getDriver().get("https://www.saucedemo.com/");
-		loginPage = new LoginPage(DriverFactory.getDriver());
+		DriverFactory.getDriver().get(ConfigReader.getProperty("base.url"));
 	}
 
-	@When("user enters valid username and password")
-	public void user_enters_valid_username_and_password() {
+	@When("user enters valid credentials")
+	public void userEntersValidCredentials() {
 
-		loginPage.login("standard_user", "secret_sauce");
-		
+//		loginPage.enterUsername(ConfigReader.getProperty("username"));
+//		loginPage.enterPassword(ConfigReader.getProperty("password"));
+
+		System.out.println("Login Username: " + TestUserStorage.getUsername());
+		loginPage.login(TestUserStorage.getUsername(), TestUserStorage.getPassword());
 	}
 
-	@Then("user should be redirected to inventory page")
-	public void user_should_be_redirected_to_inventory_page() {
-		
+	@And("user clicks login button")
+	public void userClicksLoginButton() {
 
-		String currentUrl = DriverFactory.getDriver().getCurrentUrl();
-
-		Assert.assertTrue(currentUrl.contains("inventory"), "Login failed!");
+		loginPage.clickLogin();
 	}
 
-	@When("user enters invalid username and password")
-	public void user_enters_invalid_username_and_password() {
+	@Then("user should be redirected to account overview page")
+	public void userShouldBeRedirectedToAccountOverviewPage() {
 
-		loginPage.login("wrong_user", "wrong_password");
+		Assert.assertTrue(loginPage.isLoginSuccessful(), "Login failed");
 	}
-
-	@Then("error message should be displayed")
-	public void error_message_should_be_displayed() {
-
-		String actualError = loginPage.getErrorMessage();
-
-		Assert.assertTrue(actualError.contains("Username and password do not match"),
-				"Error message validation failed!");
-
-	}
+	
 }

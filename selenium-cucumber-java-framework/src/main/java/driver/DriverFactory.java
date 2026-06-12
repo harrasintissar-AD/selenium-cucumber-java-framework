@@ -1,6 +1,9 @@
 package driver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import utils.ConfigReader;
+
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -31,25 +34,53 @@ public class DriverFactory {
 
 		if (driver.get() == null) {
 
-			WebDriverManager.chromedriver().setup();
+			String browser = ConfigReader.getProperty("browser");
 
-			ChromeOptions options = new ChromeOptions();
+			WebDriver webDriver;
 
-			options.addArguments("--headless=new");
+			switch (browser.toLowerCase()) {
 
-			options.addArguments("--disable-gpu");
+			case "chrome":
 
-			options.addArguments("--no-sandbox");
+				WebDriverManager.chromedriver().setup();
 
-			options.addArguments("--window-size=1920,1080");
+				ChromeOptions options = new ChromeOptions();
 
-			WebDriver chromeDriver = new ChromeDriver(options);
+				boolean headless = Boolean.parseBoolean(ConfigReader.getProperty("headless"));
+				System.out.println(headless);
 
-			chromeDriver.manage().window().maximize();
+				if (headless) {
 
-			chromeDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+					options.addArguments("--headless=new");
+				}
 
-			driver.set(chromeDriver);
+				options.addArguments("--disable-gpu");
+
+				options.addArguments("--no-sandbox");
+
+//				options.addArguments("--window-size=1920,1080");
+				
+				options.addArguments("--disable-blink-features=AutomationControlled");
+
+				options.addArguments("--start-maximized");
+
+				options.addArguments("--disable-dev-shm-usage");
+				
+				options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+
+				webDriver = new ChromeDriver(options);
+				break;
+
+			default:
+
+				throw new RuntimeException("Browser not supported: " + browser);
+			}
+
+			webDriver.manage().window().maximize();
+
+			webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+			driver.set(webDriver);
 		}
 	}
 

@@ -9,81 +9,67 @@ import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.java.Scenario;
 import reports.ReportManager;
+import utils.ConfigReader;
 import utils.ScreenshotUtil;
 
 public class Hooks {
 
-    private int stepCounter = 1;
-    private Scenario currentScenario;
+	private int stepCounter = 1;
+	private Scenario currentScenario;
 
-    @BeforeAll
-    public static void cleanExecutionFolder() {
+	@BeforeAll
+	public static void cleanExecutionFolder() {
 
-        ReportManager.cleanOldReports();
+		ReportManager.cleanOldReports();
 
-        File screenshotsFolder =
-                new File(
-                        "target/screenshots");
+		File screenshotsFolder = new File("target/screenshots");
 
-        if (screenshotsFolder.exists()) {
+		if (screenshotsFolder.exists()) {
 
-            File[] files =
-                    screenshotsFolder.listFiles();
+			File[] files = screenshotsFolder.listFiles();
 
-            if (files != null) {
+			if (files != null) {
 
-                for (File file : files) {
-                    file.delete();
-                }
-            }
-        }
-    }
+				for (File file : files) {
+					file.delete();
+				}
+			}
+		}
+	}
 
-    @Before
-    public void setUp(
-            Scenario scenario) {
+	@Before
+	public void setUp(Scenario scenario) {
 
-        DriverFactory.initializeDriver();
+		DriverFactory.initializeDriver();
 
-        this.currentScenario =
-                scenario;
+		DriverFactory.getDriver().get(ConfigReader.getProperty("base.url"));
 
-        stepCounter = 1;
+		this.currentScenario = scenario;
 
-        ReportManager.startScenario(
-                scenario.getName());
-    }
+		stepCounter = 1;
 
-    @AfterStep
-    public void takeScreenshotAfterStep() {
+		ReportManager.startScenario(scenario.getName());
+	}
 
-        String screenshotPath =
-                ScreenshotUtil.captureScreenshot(
+	@AfterStep
+	public void takeScreenshotAfterStep() {
 
-                        currentScenario.getName()
-                                + "_STEP_"
-                                + stepCounter);
+		String screenshotPath = ScreenshotUtil.captureScreenshot(
 
-        ReportManager.addStepScreenshot(
-                "Step " + stepCounter,
-                screenshotPath);
+				currentScenario.getName() + "_STEP_" + stepCounter);
 
-        stepCounter++;
-    }
+		ReportManager.addStepScreenshot("Step " + stepCounter, screenshotPath);
 
-    @After
-    public void tearDown(
-            Scenario scenario) {
+		stepCounter++;
+	}
 
-        String status =
-                scenario.isFailed()
-                        ? "FAIL"
-                        : "PASS";
+	@After
+	public void tearDown(Scenario scenario) {
 
-        ReportManager.finishScenario(
-                scenario.getName(),
-                status);
+		String status = scenario.isFailed() ? "FAIL" : "PASS";
 
-        DriverFactory.quitDriver();
-    }
+		ReportManager.finishScenario(scenario.getName(), status);
+
+//        DriverFactory.quitDriver();
+	}
 }

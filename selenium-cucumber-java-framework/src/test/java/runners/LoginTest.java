@@ -1,60 +1,49 @@
 package runners;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import driver.DriverFactory;
 import pages.LoginPage;
+import utils.ConfigReader;
 
 public class LoginTest {
 
-    LoginPage loginPage;
+	LoginPage loginPage;
 
-    @BeforeMethod
-    public void setup() {
+	@BeforeMethod
+	public void setup() {
 
-        DriverFactory.initializeDriver();
+		DriverFactory.initializeDriver();
 
-        DriverFactory.getDriver()
-                .get("https://www.saucedemo.com/");
+		DriverFactory.getDriver().get(ConfigReader.getProperty("base.url"));
 
-        loginPage = new LoginPage(
-                DriverFactory.getDriver());
-    }
+		loginPage = new LoginPage(DriverFactory.getDriver());
+	}
 
-    @Test(enabled = true)
-    public void successfulLoginTest() {
+	@Test(enabled = true)
+	public void successfulLoginTest() {
 
-        loginPage.login(
-                "standard_user",
-                "secret_sauce");
+		loginPage.login(ConfigReader.getProperty("username"),
 
-        String currentUrl =
-                DriverFactory.getDriver()
-                        .getCurrentUrl();
+				ConfigReader.getProperty("password"));
 
-        Assert.assertTrue(
-                currentUrl.contains("inventory"),
-                "Login failed!");
-    }
-    
-    @Test
-    public void invalidLoginTest() {
+		Assert.assertTrue(loginPage.isLoginSuccessful(), "Login failed!");
+	}
 
-        loginPage.login(
-                "wrong_user",
-                "wrong_password");
+	@Test
+	public void invalidLoginTest() {
 
-        String actualError =
-                loginPage.getErrorMessage();
+		loginPage.login(ConfigReader.getProperty("invalid.username"),
 
-        Assert.assertTrue(
-                actualError.contains("Username and password do not match any user in this service"),
-                "Error message validation failed!");
-    }
-    
+				ConfigReader.getProperty("invalid.password"));
+
+		String actualError = loginPage.getErrorMessage();
+
+		Assert.assertTrue(actualError.contains("The username and password could not be verified."),
+				"Error message validation failed!");
+	}
 
 //    @AfterMethod
 //    public void tearDown() {

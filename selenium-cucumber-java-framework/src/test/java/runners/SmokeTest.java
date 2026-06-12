@@ -5,23 +5,23 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import driver.DriverFactory;
+import utils.ConfigReader;
 
 public class SmokeTest {
 
-    @BeforeMethod
-    public void setup() {
-        DriverFactory.initializeDriver();
-    }
+	@BeforeMethod
+	public void setup() {
+		DriverFactory.initializeDriver();
+	}
 
-    @Test
-    public void launchWebsite() {
+	@Test
+	public void launchWebsite() {
 
-        DriverFactory.getDriver()
-                .get("https://www.saucedemo.com/");
-    }
+		DriverFactory.getDriver().get(ConfigReader.getProperty("base.url"));
+	}
 
-    @AfterMethod
-    public void tearDown() {
-        DriverFactory.quitDriver();
-    }
+	@AfterMethod
+	public void tearDown() {
+		DriverFactory.quitDriver();
+	}
 }

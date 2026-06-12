@@ -1,53 +1,70 @@
-
 package pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 
 public class LoginPage {
 
-    private final WebDriver driver;
+	private WebDriver driver;
 
-    @FindBy(id = "user-name")
-    private WebElement usernameField;
+	public LoginPage(WebDriver driver) {
 
-    @FindBy(id = "password")
-    private WebElement passwordField;
+		this.driver = driver;
+	}
 
-    @FindBy(id = "login-button")
-    private WebElement loginButton;
+	private final By usernameField = By.name("username");
 
-    @FindBy(xpath = "//h3[@data-test='error']")
-    private WebElement errorMessage;
+	private final By passwordField = By.name("password");
 
-    public LoginPage(WebDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(driver, this);
-    }
+	private final By loginButton = By.xpath("//input[@value='Log In']");
 
-    public void enterUsername(String username) {
-        usernameField.clear();
-        usernameField.sendKeys(username);
-    }
+	private final By accountsOverview = By.xpath("//h1[contains(text(),'Accounts Overview')]");
 
-    public void enterPassword(String password) {
-        passwordField.clear();
-        passwordField.sendKeys(password);
-    }
+	private final By errorMessage = By.xpath("//p[@class='error']");
 
-    public void clickLogin() {
-        loginButton.click();
-    }
+	private final By logoutButton = By.linkText("Log Out");
 
-    public void login(String username, String password) {
-        enterUsername(username);
-        enterPassword(password);
-        clickLogin();
-    }
+	public void enterUsername(String username) {
 
-    public String getErrorMessage() {
-    	return errorMessage.getText();
-    }
+		driver.findElement(usernameField).sendKeys(username);
+	}
+
+	public void enterPassword(String password) {
+
+		driver.findElement(passwordField).sendKeys(password);
+	}
+
+	public void clickLogin() {
+
+		driver.findElement(loginButton).click();
+	}
+
+	public void login(String username, String password) {
+
+		enterUsername(username);
+
+		enterPassword(password);
+
+		//clickLogin();
+	}
+
+	public boolean isLoginSuccessful() {
+
+		return driver.findElement(accountsOverview).isDisplayed();
+	}
+
+	public String getErrorMessage() {
+
+		return driver.findElement(errorMessage).getText();
+	}
+
+	public void clickLogout() {
+
+		driver.findElement(logoutButton).click();
+	}
+
+	public boolean isAtLoginPage() {
+
+		return driver.findElement(loginButton).isDisplayed();
+	}
 }
