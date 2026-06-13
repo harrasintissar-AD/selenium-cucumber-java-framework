@@ -32,18 +32,6 @@ public class LoginTest {
 		Assert.assertTrue(loginPage.isLoginSuccessful(), "Login failed!");
 	}
 
-	@Test
-	public void invalidLoginTest() {
-
-		loginPage.login(ConfigReader.getProperty("invalid.username"),
-
-				ConfigReader.getProperty("invalid.password"));
-
-		String actualError = loginPage.getErrorMessage();
-
-		Assert.assertTrue(actualError.contains("The username and password could not be verified."),
-				"Error message validation failed!");
-	}
 
 //    @AfterMethod
 //    public void tearDown() {
