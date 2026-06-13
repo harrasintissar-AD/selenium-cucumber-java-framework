@@ -1,7 +1,12 @@
 package pages;
 
+import java.time.Duration;
+import java.util.concurrent.StructuredTaskScope.TimeoutException;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class LoginPage {
 
@@ -45,12 +50,17 @@ public class LoginPage {
 
 		enterPassword(password);
 
-		//clickLogin();
+		// clickLogin();
 	}
 
 	public boolean isLoginSuccessful() {
-
-		return driver.findElement(accountsOverview).isDisplayed();
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+			wait.until(ExpectedConditions.presenceOfElementLocated(accountsOverview));
+			return true;
+		} catch (TimeoutException e) {
+			return false;
+		}
 	}
 
 	public String getErrorMessage() {
