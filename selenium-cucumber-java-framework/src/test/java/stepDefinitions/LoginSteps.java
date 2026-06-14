@@ -17,8 +17,8 @@ public class LoginSteps {
 		DriverFactory.getDriver().get(ConfigReader.getProperty("base.url"));
 	}
 
-	@When("user enters valid credentials")
-	public void userEntersValidCredentials() {
+	@When("user enters valid credentials and clicks login button")
+	public void userEntersValidCredentialsAndClickLogingButton() {
 
 //		loginPage.enterUsername(ConfigReader.getProperty("username"));
 //		loginPage.enterPassword(ConfigReader.getProperty("password"));

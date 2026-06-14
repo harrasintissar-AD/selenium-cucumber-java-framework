@@ -10,7 +10,6 @@ Feature:  Customer Authentication
   Scenario: Customer logs in with valid credentials
 
     Given user is on Parabank login page
-    When user enters valid credentials
-    And user clicks login button
+    When user enters valid credentials and clicks login button
     Then user should be redirected to account overview page
     Then user should be logged out successfully

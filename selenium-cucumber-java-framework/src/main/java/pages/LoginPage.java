@@ -50,7 +50,7 @@ public class LoginPage {
 
 		enterPassword(password);
 
-		// clickLogin();
+	    clickLogin();
 	}
 
 	public boolean isLoginSuccessful() {
