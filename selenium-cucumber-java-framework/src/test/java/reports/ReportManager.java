@@ -64,21 +64,44 @@ public class ReportManager {
 		htmlContent.append("<h1>Scenario: " + scenarioName + "</h1>");
 	}
 
+//	public static void addStepScreenshot(String stepName, String imagePath) {
+//
+//		File imageFile = new File(imagePath);
+//
+//		String imageName = imageFile.getName();
+//
+//		String relativePath = "../screenshots/" + imageName;
+//
+//		htmlContent.append("<div class='step'>");
+//
+//		htmlContent.append("<h3>" + stepName + "</h3>");
+//
+//		htmlContent.append("<img src='" + relativePath + "'>");
+//
+//		htmlContent.append("</div>");
+//	}
+
 	public static void addStepScreenshot(String stepName, String imagePath) {
 
-		File imageFile = new File(imagePath);
+		try {
 
-		String imageName = imageFile.getName();
+			File imageFile = new File(imagePath);
 
-		String relativePath = "../screenshots/" + imageName;
+			byte[] imageBytes = java.nio.file.Files.readAllBytes(imageFile.toPath());
 
-		htmlContent.append("<div class='step'>");
+			String base64Image = java.util.Base64.getEncoder().encodeToString(imageBytes);
 
-		htmlContent.append("<h3>" + stepName + "</h3>");
+			htmlContent.append("<div class='step'>");
 
-		htmlContent.append("<img src='" + relativePath + "'>");
+			htmlContent.append("<h3>").append(stepName).append("</h3>");
 
-		htmlContent.append("</div>");
+			htmlContent.append("<img src='data:image/png;base64,").append(base64Image).append("'/>");
+
+			htmlContent.append("</div>");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void finishScenario(String scenarioName, String status) {
