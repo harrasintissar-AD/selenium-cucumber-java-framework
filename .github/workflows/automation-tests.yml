@@ -107,26 +107,12 @@ jobs:
       # Reports
       # -----------------------------
 
-      - name: Upload Execution Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: execution-report
-          path: ${{ github.workspace }}/selenium-cucumber-java-framework/target/execution-report/
-
-      - name: Upload Screenshots
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: screenshots
-          path: ${{ github.workspace }}/selenium-cucumber-java-framework/target/screenshots/
-
-      - name: Upload TestNG Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-output
-          path: ${{ github.workspace }}/selenium-cucumber-java-framework/test-output/
+		- name: Upload Execution Report
+		  uses: actions/upload-artifact@v4
+		  if: always()
+		  with:
+		    name: execution-report
+		    path: ${{ github.workspace }}/selenium-cucumber-java-framework/target/
 
       # -----------------------------
       # Cleanup
