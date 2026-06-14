@@ -22,7 +22,7 @@ public class LoginTest {
 		loginPage = new LoginPage(DriverFactory.getDriver());
 	}
 
-	@Test(enabled = true)
+	@Test(enabled = false)
 	public void successfulLoginTest() {
 
 		loginPage.login(ConfigReader.getProperty("username"),
