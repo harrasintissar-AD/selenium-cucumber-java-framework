@@ -20,9 +20,6 @@ public class LoginSteps {
 	@When("user enters valid credentials and clicks login button")
 	public void userEntersValidCredentialsAndClickLogingButton() {
 
-//		loginPage.enterUsername(ConfigReader.getProperty("username"));
-//		loginPage.enterPassword(ConfigReader.getProperty("password"));
-
 		System.out.println("Login Username: " + TestUserStorage.getUsername());
 		loginPage.login(TestUserStorage.getUsername(), TestUserStorage.getPassword());
 	}
@@ -38,5 +35,5 @@ public class LoginSteps {
 
 		Assert.assertTrue(loginPage.isLoginSuccessful(), "Login failed");
 	}
-	
+
 }

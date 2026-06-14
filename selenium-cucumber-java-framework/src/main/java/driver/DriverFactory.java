@@ -58,11 +58,9 @@ public class DriverFactory {
 
 				options.addArguments("--no-sandbox");
 
-//				options.addArguments("--window-size=1920,1080");
+//				options.addArguments("--window-size=1600,2500");
 				
 				options.addArguments("--disable-blink-features=AutomationControlled");
-
-				options.addArguments("--start-maximized");
 
 				options.addArguments("--disable-dev-shm-usage");
 				

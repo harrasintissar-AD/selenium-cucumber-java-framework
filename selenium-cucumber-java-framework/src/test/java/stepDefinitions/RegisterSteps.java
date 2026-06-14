@@ -31,9 +31,6 @@ public class RegisterSteps {
 
 		loginPage = new LoginPage(driver);
 
-//        username = ConfigReader.getProperty("username");
-//        password = ConfigReader.getProperty("password");
-
 		Random random = new Random();
 
 		username = "user" + random.nextInt(900);

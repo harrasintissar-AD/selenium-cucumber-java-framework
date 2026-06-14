@@ -51,18 +51,6 @@ public class Hooks {
 		ReportManager.startScenario(scenario.getName());
 	}
 
-	@AfterStep
-	public void takeScreenshotAfterStep() {
-
-		String screenshotPath = ScreenshotUtil.captureScreenshot(
-
-				currentScenario.getName() + "_STEP_" + stepCounter);
-
-		ReportManager.addStepScreenshot("Step " + stepCounter, screenshotPath);
-
-		stepCounter++;
-	}
-
 	@After
 	public void tearDown(Scenario scenario) {
 

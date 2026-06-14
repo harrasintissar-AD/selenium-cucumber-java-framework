@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 
@@ -12,41 +13,38 @@ import driver.DriverFactory;
 
 public class ScreenshotUtil {
 
-    public static String captureScreenshot(
-            String fileName) {
+	public static String captureScreenshot(String fileName) {
 
-        try {
+		try {
 
-            File source =
-                    ((TakesScreenshot)
-                            DriverFactory.getDriver())
-                            .getScreenshotAs(
-                                    OutputType.FILE);
+			JavascriptExecutor js = (JavascriptExecutor) DriverFactory.getDriver();
 
-            String path =
-                    "target/screenshots/"
-                            + fileName
-                            .replace(" ", "_")
-                            + ".png";
+			Long pageHeight = (Long) js.executeScript(
+					"return Math.max(" + "document.body.scrollHeight," + "document.documentElement.scrollHeight);");
 
-            File destination =
-                    new File(path);
+			DriverFactory.getDriver().manage().window()
+					.setSize(new org.openqa.selenium.Dimension(1600, pageHeight.intValue()));
 
-            destination
-                    .getParentFile()
-                    .mkdirs();
+			js.executeScript("document.body.style.overflow='hidden'");
 
-            Files.copy(
-                    source.toPath(),
-                    destination.toPath(),
-                    StandardCopyOption.REPLACE_EXISTING);
+			File source = ((TakesScreenshot) DriverFactory.getDriver()).getScreenshotAs(OutputType.FILE);
 
-            return path;
+			String path = "target/screenshots/" + fileName.replace(" ", "_") + ".png";
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+			File destination = new File(path);
 
-        return null;
-    }
+			destination.getParentFile().mkdirs();
+
+			Files.copy(source.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+			js.executeScript("document.body.style.overflow='auto'");
+
+			return path;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 }

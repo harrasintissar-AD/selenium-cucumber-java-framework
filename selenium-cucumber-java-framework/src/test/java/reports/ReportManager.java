@@ -34,68 +34,67 @@ public class ReportManager {
 		htmlContent = new StringBuilder();
 
 		htmlContent.append("""
-				<html>
-				<head>
-				    <title>Scenario Report</title>
-				    <style>
-				        body {
-				            font-family: Arial;
-				            margin: 30px;
-				        }
+								<html>
+								<head>
+								    <title>Scenario Report</title>
+								    <style>
+				    body {
+				        font-family: Arial;
+				        margin: 30px;
+				    }
 
-				        img {
-				            width: 100%;
-				            border: 1px solid #ccc;
-				            margin-bottom: 20px;
-				        }
+				    h1 {
+				        color: #333;
+				    }
 
-				        h1 {
-				            color: #333;
-				        }
+				    .step {
+				        margin-top: 40px;
+				        page-break-after: always;
+				        text-align: center;
+				    }
 
-				        .step {
-				            margin-top: 25px;
-				        }
-				    </style>
-				</head>
-				<body>
-				""");
+				    .step-title {
+				        color: #2c3e50;
+				        font-size: 22px;
+				        margin-bottom: 15px;
+				    }
+
+				    .image-container {
+				        width: 100%;
+				        border: 1px solid #ddd;
+				        padding: 10px;
+				    }
+
+				    img {
+				        width: 100%;
+				        height: auto;
+				    }
+				</style>
+								</head>
+								<body>
+								""");
 
 		htmlContent.append("<h1>Scenario: " + scenarioName + "</h1>");
 	}
-
-//	public static void addStepScreenshot(String stepName, String imagePath) {
-//
-//		File imageFile = new File(imagePath);
-//
-//		String imageName = imageFile.getName();
-//
-//		String relativePath = "../screenshots/" + imageName;
-//
-//		htmlContent.append("<div class='step'>");
-//
-//		htmlContent.append("<h3>" + stepName + "</h3>");
-//
-//		htmlContent.append("<img src='" + relativePath + "'>");
-//
-//		htmlContent.append("</div>");
-//	}
 
 	public static void addStepScreenshot(String stepName, String imagePath) {
 
 		try {
 
 			File imageFile = new File(imagePath);
-
 			byte[] imageBytes = java.nio.file.Files.readAllBytes(imageFile.toPath());
-
 			String base64Image = java.util.Base64.getEncoder().encodeToString(imageBytes);
 
 			htmlContent.append("<div class='step'>");
 
-			htmlContent.append("<h3>").append(stepName).append("</h3>");
+			htmlContent.append("<h3 class='step-title'>").append(stepName).append("</h3>");
 
-			htmlContent.append("<img src='data:image/png;base64,").append(base64Image).append("'/>");
+			htmlContent.append("<div class='image-container'>");
+
+			htmlContent.append("<img style='max-width:100%; height:auto;' src='data:image/png;base64,")
+					.append(base64Image).append("'/>");
+
+			htmlContent.append("</div>");
 
 			htmlContent.append("</div>");
 
@@ -106,7 +105,7 @@ public class ReportManager {
 
 	public static void finishScenario(String scenarioName, String status) {
 
-		htmlContent.append("<h2>Status: " + status + "</h2>");
+		htmlContent.append("<h3>Status: " + status + "</h3>");
 
 		htmlContent.append("</body></html>");
 
