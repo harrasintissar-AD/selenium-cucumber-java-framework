@@ -8,6 +8,8 @@ import java.nio.file.StandardCopyOption;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 import driver.DriverFactory;
 
@@ -46,5 +48,20 @@ public class ScreenshotUtil {
 		}
 
 		return null;
+	}
+
+	public static void captureHighlightedScreenshot(WebDriver driver, WebElement element, String name) {
+
+		HighlightUtil.highlightElement(driver, element);
+
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		ScreenshotUtil.captureScreenshot(name);
+
+		HighlightUtil.removeHighlight(driver, element);
 	}
 }

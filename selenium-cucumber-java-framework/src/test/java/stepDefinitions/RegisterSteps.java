@@ -11,6 +11,7 @@ import driver.DriverFactory;
 import pages.LoginPage;
 import pages.RegisterPage;
 import utils.ConfigReader;
+import utils.HighlightUtil;
 import utils.TestUserStorage;
 
 public class RegisterSteps {
@@ -59,6 +60,8 @@ public class RegisterSteps {
 	public void user_should_see_registration_successful_message() {
 
 		String expectedMessage = "Your account was created successfully. You are now logged in.";
+
+		HighlightUtil.highlightElement(DriverFactory.getDriver(), registerPage.getRegistrationSuccessMessageElement());
 
 		String actualMessage = registerPage.getRegistrationSuccessMessage();
 
