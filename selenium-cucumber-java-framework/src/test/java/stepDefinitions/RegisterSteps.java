@@ -10,7 +10,6 @@ import org.testng.Assert;
 import driver.DriverFactory;
 import pages.LoginPage;
 import pages.RegisterPage;
-import utils.ConfigReader;
 import utils.HighlightUtil;
 import utils.TestUserStorage;
 
@@ -48,6 +47,12 @@ public class RegisterSteps {
 
 		registerPage.openRegister();
 		registerPage.register(username, password);
+	}
+
+	@And("user clicks on register button")
+	public void click_register_button() {
+
+		registerPage.registerBtn();
 	}
 
 	@And("user should see the accounts overview page")

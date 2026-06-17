@@ -4,12 +4,14 @@ Feature:  Customer Authentication
    
     Given user opens ParaBank application
     When user registers with valid details
+    And user clicks on register button
     Then user should see registration successful message
     Then user should be logged out successfully
     
   Scenario: Customer logs in with valid credentials
 
     Given user is on Parabank login page
-    When user enters valid credentials and clicks login button
+    When user enters valid credentials
+    And user clicks on login button
     Then user should be redirected to account overview page
     Then user should be logged out successfully

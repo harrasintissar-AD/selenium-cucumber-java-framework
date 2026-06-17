@@ -46,7 +46,9 @@ public class RegisterPage {
 		driver.findElement(username).sendKeys(user);
 		driver.findElement(password).sendKeys(pass);
 		driver.findElement(confirmPassword).sendKeys(pass);
-
+	}
+	
+	public void registerBtn() {
 		driver.findElement(registerBtn).click();
 	}
 

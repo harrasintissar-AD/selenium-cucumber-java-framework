@@ -5,6 +5,7 @@ import io.cucumber.java.en.*;
 import org.testng.Assert;
 import pages.LoginPage;
 import utils.ConfigReader;
+import utils.HighlightUtil;
 import utils.TestUserStorage;
 
 public class LoginSteps {
@@ -17,15 +18,15 @@ public class LoginSteps {
 		DriverFactory.getDriver().get(ConfigReader.getProperty("base.url"));
 	}
 
-	@When("user enters valid credentials and clicks login button")
-	public void userEntersValidCredentialsAndClickLogingButton() {
+	@When("user enters valid credentials")
+	public void userEntersValidCredentials() {
 
 		System.out.println("Login Username: " + TestUserStorage.getUsername());
 		loginPage.login(TestUserStorage.getUsername(), TestUserStorage.getPassword());
 	}
 
-	@And("user clicks login button")
-	public void userClicksLoginButton() {
+	@And("user clicks on login button")
+	public void userClicksOnLoginButton() {
 
 		loginPage.clickLogin();
 	}
@@ -34,6 +35,7 @@ public class LoginSteps {
 	public void userShouldBeRedirectedToAccountOverviewPage() {
 
 		Assert.assertTrue(loginPage.isLoginSuccessful(), "Login failed");
+		HighlightUtil.highlightElement(DriverFactory.getDriver(), loginPage.getOverviewElement());
 	}
 
 }
