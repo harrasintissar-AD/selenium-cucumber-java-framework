@@ -4,12 +4,20 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Generates HTML execution reports with embedded base64 screenshots.
+ * Creates one report per scenario with all steps captured as images.
+ */
 public class ReportManager {
 
 	private static final String REPORT_FOLDER = "target/execution-report/";
 
 	private static StringBuilder htmlContent;
 
+	/**
+	 * Deletes all old reports and creates fresh report directory.
+	 * Call once at start of test suite.
+	 */
 	public static void cleanOldReports() {
 
 		File folder = new File(REPORT_FOLDER);
@@ -29,6 +37,12 @@ public class ReportManager {
 		folder.mkdirs();
 	}
 
+	/**
+	 * Initializes report structure for a scenario.
+	 * Call once per scenario in @Before hook.
+	 *
+	 * @param scenarioName the scenario name from feature file
+	 */
 	public static void startScenario(String scenarioName) {
 
 		htmlContent = new StringBuilder();
@@ -77,11 +91,19 @@ public class ReportManager {
 		htmlContent.append("<h1>Scenario: " + scenarioName + "</h1>");
 	}
 
+	/**
+	 * Adds a step screenshot to the report.
+	 * Screenshots are base64 encoded to embed directly in HTML (single-file report).
+	 *
+	 * @param stepName step description (e.g., "Step 1 - User clicks login")
+	 * @param imagePath path to screenshot file
+	 */
 	public static void addStepScreenshot(String stepName, String imagePath) {
 
 		try {
 
 			File imageFile = new File(imagePath);
+			// Base64 encode: makes report self-contained, no external image links
 			byte[] imageBytes = java.nio.file.Files.readAllBytes(imageFile.toPath());
 			String base64Image = java.util.Base64.getEncoder().encodeToString(imageBytes);
 
@@ -91,6 +113,7 @@ public class ReportManager {
 
 			htmlContent.append("<div class='image-container'>");
 
+			// Data URI allows embedding image directly without external file reference
 			htmlContent.append("<img style='max-width:100%; height:auto;' src='data:image/png;base64,")
 					.append(base64Image).append("'/>");
 
@@ -103,6 +126,13 @@ public class ReportManager {
 		}
 	}
 
+	/**
+	 * Finalizes report and saves to HTML file.
+	 * Call once per scenario in @After hook.
+	 *
+	 * @param scenarioName scenario name (used for filename)
+	 * @param status "PASS" or "FAIL"
+	 */
 	public static void finishScenario(String scenarioName, String status) {
 
 		htmlContent.append("<h3>Status: " + status + "</h3>");

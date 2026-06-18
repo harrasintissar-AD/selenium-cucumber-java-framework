@@ -12,11 +12,21 @@ import reports.ReportManager;
 import utils.ConfigReader;
 import utils.ScreenshotUtil;
 
+/**
+ * Cucumber hooks for test setup and teardown.
+ *
+ * Execution order:
+ * @BeforeAll (once), @Before (each scenario), @After (each scenario)
+ */
 public class Hooks {
 
 	private int stepCounter = 1;
 	private Scenario currentScenario;
 
+	/**
+	 * One-time cleanup - runs once before any scenario.
+	 * Removes artifacts from previous test runs.
+	 */
 	@BeforeAll
 	public static void cleanExecutionFolder() {
 
@@ -37,6 +47,12 @@ public class Hooks {
 		}
 	}
 
+	/**
+	 * Per-scenario setup - runs before each scenario.
+	 * Initializes browser and report for this scenario.
+	 *
+	 * @param scenario Cucumber scenario object
+	 */
 	@Before
 	public void setUp(Scenario scenario) {
 
@@ -51,6 +67,12 @@ public class Hooks {
 		ReportManager.startScenario(scenario.getName());
 	}
 
+	/**
+	 * Per-scenario teardown - runs after each scenario.
+	 * Finalizes report with pass/fail status.
+	 *
+	 * @param scenario Cucumber scenario object
+	 */
 	@After
 	public void tearDown(Scenario scenario) {
 
@@ -58,6 +80,7 @@ public class Hooks {
 
 		ReportManager.finishScenario(scenario.getName(), status);
 
-//        DriverFactory.quitDriver();
+		// Uncomment to close browser after each scenario (useful for sequential tests)
+		// DriverFactory.quitDriver();
 	}
 }
