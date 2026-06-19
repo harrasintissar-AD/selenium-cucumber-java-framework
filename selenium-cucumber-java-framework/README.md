@@ -1,179 +1,399 @@
 # Selenium Cucumber Java Automation Framework
 
-A scalable and maintainable UI automation testing framework built using **Java, Selenium WebDriver, Cucumber (BDD), Maven, and TestNG**, following industry best practices such as **Page Object Model (POM)** and **Behavior Driven Development (BDD)**.
+<!-- Optional GitHub Actions Badge -->
 
-This framework includes **CI/CD integration using GitHub Actions**, automatic screenshot capture after every step, and detailed HTML execution reporting for easier debugging and stakeholder visibility.
+<!-- Replace YOUR_USERNAME and YOUR_REPOSITORY -->
 
----
+![CI](https://github.com/harrasintissar-AD/selenium-cucumber-java-framework/blob/main/.github/workflows/automation-tests.yml)
 
-## 🚀 Features
+## Overview
 
-* ✅ Selenium WebDriver for browser automation
-* ✅ Java-based automation framework
-* ✅ Cucumber BDD with Gherkin syntax
-* ✅ Page Object Model (POM) design pattern
-* ✅ TestNG execution and reporting
-* ✅ Maven dependency management
-* ✅ GitHub Actions CI/CD integration
-* ✅ Automatic screenshot capture after every step
-* ✅ Custom HTML execution reports
-* ✅ Headless browser execution support
-* ✅ Cross-environment execution support
+A custom-built QA Automation Framework developed using **Java**, **Selenium WebDriver**, **Cucumber BDD**, and **Maven**.
 
----
+This project demonstrates industry-standard automation testing practices including:
 
-## 🛠 Tech Stack
+* Page Object Model (POM)
+* Thread-safe WebDriver management using ThreadLocal
+* Event-driven screenshot capture
+* Custom HTML reporting
+* Element highlighting for improved visual reporting
+* Configuration-driven test execution
+* Dockerized ParaBank test environment
+* GitHub Actions CI/CD integration
+* Automated report artifact publishing
 
-* **Java 17**
-* **Selenium WebDriver**
-* **Cucumber (BDD)**
-* **TestNG**
-* **Maven**
-* **WebDriverManager**
-* **Git & GitHub**
-* **GitHub Actions**
-* **Eclipse IDE**
+The framework was designed to provide maintainable, scalable, and readable automated tests while generating detailed execution evidence for debugging and analysis.
 
 ---
 
-## 📁 Project Structure
+## Technology Stack
+
+* Java 17
+* Selenium WebDriver
+* Cucumber BDD
+* TestNG
+* Maven
+* WebDriverManager
+* Docker
+* GitHub Actions
+* Git & GitHub
+
+---
+
+## Key Features
+
+### Test Automation
+
+* Page Object Model (POM) architecture
+* Reusable page actions and utilities
+* Configuration-driven execution
+* Support for headless execution
+* Clean separation of framework components
+
+### Reporting
+
+* Custom HTML report generation
+* Per-step screenshots
+* Embedded Base64 screenshots
+* Self-contained reports
+* Scenario execution status
+* Highlighted UI elements in screenshots
+
+### Framework Design
+
+* Thread-safe WebDriver management
+* Event-based screenshot capture using Cucumber listeners
+* Automatic cleanup of previous execution artifacts
+* Modular and maintainable project structure
+
+### DevOps & CI/CD
+
+* Automated GitHub Actions workflow
+* Dockerized ParaBank deployment
+* Maven dependency caching
+* Automated artifact publishing
+* Linux-based test execution
+
+---
+
+## Project Architecture
+
+### Driver Management
+
+`DriverFactory`
+
+Responsible for:
+
+* WebDriver initialization
+* Browser configuration
+* Thread-safe execution using `ThreadLocal<WebDriver>`
+* Driver lifecycle management
+
+### Configuration Management
+
+`ConfigReader`
+
+Responsible for:
+
+* Loading framework configuration
+* Reading environment-specific properties
+* Managing execution settings
+
+### Test Lifecycle
+
+`Hooks`
+
+Responsible for:
+
+* Test setup
+* Test teardown
+* Report initialization
+* Execution artifact cleanup
+
+### Step Event Processing
+
+`StepListener`
+
+Responsible for:
+
+* Listening to Cucumber step events
+* Capturing screenshots after each executed step
+* Sanitizing filenames
+* Forwarding screenshots to the reporting engine
+
+### Reporting
+
+`ReportManager`
+
+Responsible for:
+
+* HTML report generation
+* Screenshot embedding
+* Scenario status reporting
+* Report file creation
+
+### Utilities
+
+#### ScreenshotUtil
+
+Captures full-page screenshots and stores them in the framework output directories.
+
+#### HighlightUtil
+
+Highlights web elements before screenshot capture to improve report readability and debugging.
+
+---
+
+## Project Structure
 
 ```text
 src
 ├── main
-│   ├── java
-│   │   ├── driver
-│   │   │   └── DriverFactory.java
-│   │   │
-│   │   └── pages
-│   │       └── LoginPage.java
-│   │
-│   └── resources
+│   └── java
+│       ├── driver
+│       │   └── DriverFactory.java
+│       │
+│       ├── pages
+│       │   ├── LoginPage.java
+│       │   └── RegisterPage.java
+│       │
+│       └── utils
+│           ├── ConfigReader.java
+│           └── HighlightUtil.java
 │
 ├── test
-│   ├── java
-│   │   ├── hooks
-│   │   ├── reports
-│   │   ├── runners
-│   │   ├── stepDefinitions
-│   │   └── utils
-│   │
-│   └── resources
-│       ├── config
-│       └── features
+│   └── java
+│       ├── hooks
+│       │   ├── Hooks.java
+│       │   └── StepListener.java
+│       │
+│       ├── reports
+│       │   └── ReportManager.java
+│       │
+│       ├── runners
+│       │   ├── LoginTest.java
+│       │   ├── SmokeTest.java
+│       │   └── TestRunner.java
+│       │
+│       ├── stepdefinitions
+│       │   ├── LoginSteps.java
+│       │   └── RegisterSteps.java
+│       │
+│       └── utils
+│           ├── ScreenshotUtil.java
+│           └── TestUserStorage.java
 │
-├── screenshots
-├── target
-└── .github
-    └── workflows
-```
-
-### Structure Overview
-
-* **driver** → WebDriver initialization and browser configuration
-* **pages** → Page Object Model (POM) classes
-* **hooks** → Cucumber hooks (`@Before`, `@After`)
-* **reports** → Custom HTML execution reporting logic
-* **runners** → Test execution configuration
-* **stepDefinitions** → Cucumber step implementations
-* **utils** → Reusable helper/utility classes
-* **features** → Gherkin feature files
-* **config** → Environment/configuration files
-* **screenshots** → Automatically captured screenshots during execution
-* **.github/workflows** → GitHub Actions CI/CD pipeline configuration
-
----
-
-## ▶️ How to Run the Project
-
-### Clone Repository
-
-```bash
-git clone https://github.com/harrasintissar-AD/selenium-cucumber-java-framework.git
-```
-
-### Navigate to Project
-
-```bash
-cd selenium-cucumber-java-framework
-```
-
-### Run Tests
-
-```bash
-mvn clean test
+└── resources
+    ├── features
+    └── config
 ```
 
 ---
 
-## ⚙️ Headless Execution
+## Automated Test Scenarios
 
-For CI/CD execution, Chrome runs in **headless mode**.
+### Registration
 
-Enable/disable headless mode in:
+* Customer registration using valid information
+* Validation of successful registration message
+* Verification of account creation flow
 
-```text
-DriverFactory.java
-```
+### Login
 
-Example:
+* Customer login using valid credentials
+* Verification of successful authentication
+* Validation of account overview page
 
-```java
-options.addArguments("--headless=new");
-```
-
-Comment the line to execute tests in normal browser mode.
+More scenarios can easily be added following the Page Object Model structure.
 
 ---
 
-## 📊 Reporting
+## Reporting
 
-The framework generates detailed execution reports automatically.
+The framework generates a dedicated HTML report for each executed scenario.
 
-### HTML Execution Report
+### Report Features
 
-Contains:
-
-* Scenario execution results
+* Scenario execution status
 * Step-by-step screenshots
-* Pass/Fail execution status
-* Visual debugging support
+* Embedded Base64 images
+* Portable HTML files
+* Improved readability through element highlighting
 
-Generated at:
-
-```text
-target/execution-report/
-```
-
-### Screenshots
-
-Screenshots are automatically captured **after every test step** to improve debugging and provide visual context.
-
-Generated at:
+### Report Locations
 
 ```text
-screenshots/
+target/
+├── execution-report/
+│   ├── Customer_logs_in_with_valid_credentials.html
+│   └── Customer_successfully_registers_a_new_account.html
+│
+└── screenshots/
 ```
 
 ---
 
-## 🔄 CI/CD Integration
+## Test Environment
 
-This project includes a **GitHub Actions pipeline** that:
+Tests are executed against a Dockerized ParaBank application, providing:
 
-* Automatically runs tests on every push to `main`
-* Supports manual execution using `workflow_dispatch`
-* Executes tests in headless mode
-* Uploads execution artifacts
-* Generates reports and screenshots automatically
-
+* Consistent test environments
+* Easy setup
+* Repeatable execution
+* Reduced environment-related issues
 
 ---
 
-## 👩‍💻 Author
+## CI/CD Pipeline
 
-**Intissar Harras_Software Automation Test Engineer**
+The framework includes a GitHub Actions workflow that automatically executes the Selenium test suite whenever changes are pushed to the `main` branch.
 
-Specialized in:
+### Pipeline Capabilities
 
-**Java | Selenium | Cucumber | API Testing | Test Automation | CI/CD**
+* Automatic test execution
+* Java 17 environment setup
+* Maven dependency caching
+* Dockerized ParaBank deployment
+* Automated Selenium execution
+* HTML report generation
+* Execution report artifact publishing
+* Automatic environment cleanup
+
+### Pipeline Flow
+
+1. Checkout repository
+2. Configure Java 17
+3. Restore Maven cache
+4. Pull ParaBank Docker image
+5. Start ParaBank container
+6. Verify application availability
+7. Execute Selenium Cucumber tests
+8. Generate HTML execution reports
+9. Upload reports as GitHub Actions artifacts
+10. Stop and remove Docker containers
+
+### Workflow Location
+
+```text
+.github/workflows/automation-test.yml
+```
+
+After every successful or failed execution, generated reports can be downloaded directly from the GitHub Actions workflow artifacts.
+
+---
+
+## Running the Tests
+
+Execute the entire suite:
+
+```powershell
+mvn test
+```
+
+Run with custom properties:
+
+```powershell
+mvn test -Dbrowser=chrome -Dheadless=true
+```
+
+Example configuration:
+
+```properties
+browser=chrome
+headless=false
+base.url=http://localhost:8080/parabank
+```
+
+---
+
+## Automation Best Practices Demonstrated
+
+* Page Object Model (POM)
+* Thread-safe parallel execution
+* Configuration-driven execution
+* Event-driven reporting
+* Separation of concerns
+* Reusable utilities
+* Self-contained execution reports
+* Automated screenshot capture
+* CI/CD integration with GitHub Actions
+* Docker-based environment provisioning
+* Automated artifact publishing
+* Maintainable project architecture
+
+---
+
+## DevOps Features
+
+The framework demonstrates modern QA automation practices by integrating test execution into a CI/CD pipeline.
+
+Implemented capabilities include:
+
+* GitHub Actions workflow automation
+* Dockerized application deployment
+* Automated test execution on Ubuntu runners
+* Maven dependency caching
+* Automatic execution report publishing
+* Environment cleanup after execution
+
+These features enable repeatable, reliable, and scalable automated testing without requiring manual environment setup.
+
+---
+
+## Future Enhancements
+
+* API automation module
+* Jenkins integration
+* Parallel test execution
+* Multi-environment support (QA/UAT/PROD)
+* Cross-browser execution in CI
+* Allure or ExtentReports integration
+* Data-driven testing
+* Environment profiles
+
+---
+
+## Skills Demonstrated
+
+* Java Automation Development
+* Selenium WebDriver
+* Cucumber BDD
+* Test Framework Design
+* HTML Report Generation
+* Maven Build Management
+* Docker
+* GitHub Actions CI/CD
+* Linux-Based Test Execution
+* Automated Artifact Management
+* Git & GitHub
+* Software Testing Best Practices
+* QA Automation Architecture
+
+---
+
+## Execution Report Sample
+
+> Add screenshots of your generated HTML reports here.
+
+Suggested screenshots:
+
+* Registration execution report
+* Login execution report
+* Highlighted success message screenshot
+* GitHub Actions successful pipeline run
+
+---
+
+## Author
+
+**Intissar Harras**
+
+QA Automation Engineer specializing in:
+
+* Java
+* Selenium WebDriver
+* Cucumber BDD
+* API Testing
+* Test Automation Framework Design
+
+This project was created as part of my professional QA Automation portfolio and demonstrates practical experience building automation frameworks from scratch, implementing custom reporting solutions, Dockerized test environments, and CI/CD automation using GitHub Actions.
