@@ -373,7 +373,8 @@ These features enable repeatable, reliable, and scalable automated testing witho
 
 ## Execution Report Sample
 
-> Add screenshots of your generated HTML reports here.
+> ![user_registers_with_valid_details_STEP_2.png](target/screenshots/user_registers_with_valid_details_STEP_2.png)
+> ![user_should_see_registration_successful_message_STEP_4.png](target/screenshots/user_should_see_registration_successful_message_STEP_4.png)
 
 Suggested screenshots:
 
