@@ -7,6 +7,8 @@ import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 
 import java.time.Duration;
 
@@ -46,38 +48,74 @@ public class DriverFactory {
 
 			String browser = ConfigReader.getProperty("browser");
 
+			// Guard against missing configuration
+			if (browser == null) {
+				throw new RuntimeException("Property 'browser' is not set in configuration");
+			}
+
 			WebDriver webDriver;
 
-			switch (browser.toLowerCase()) {
+		switch (browser.toLowerCase()) {
 
-			case "chrome":
+		case "chrome":
 
-				WebDriverManager.chromedriver().setup();
+			WebDriverManager.chromedriver().setup();
 
-				ChromeOptions options = new ChromeOptions();
+			ChromeOptions options = new ChromeOptions();
 
-				boolean headless = Boolean.parseBoolean(ConfigReader.getProperty("headless"));
-				System.out.println(headless);
+			boolean headless = Boolean.parseBoolean(ConfigReader.getProperty("headless"));
+			System.out.println(headless);
 
-				if (headless) {
-					options.addArguments("--headless=new");
-				}
-
-				// Prevent bot detection while maintaining performance
-				options.addArguments("--disable-gpu");
-				options.addArguments("--no-sandbox");
-				options.addArguments("--disable-blink-features=AutomationControlled");
-				options.addArguments("--disable-dev-shm-usage");
-				
-				// Wait for document ready state before proceeding
-				options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
-
-				webDriver = new ChromeDriver(options);
-				break;
-
-			default:
-				throw new RuntimeException("Browser not supported: " + browser);
+			if (headless) {
+				options.addArguments("--headless=new");
 			}
+
+			// Prevent bot detection while maintaining performance
+			options.addArguments("--disable-gpu");
+			options.addArguments("--no-sandbox");
+			options.addArguments("--disable-blink-features=AutomationControlled");
+			options.addArguments("--disable-dev-shm-usage");
+
+			// Wait for document ready state before proceeding
+			options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+
+			webDriver = new ChromeDriver(options);
+			break;
+
+		case "edge":
+
+			String edgeDriverPath = ConfigReader.getProperty("edge.driver.path");
+			if (edgeDriverPath != null && !edgeDriverPath.isEmpty()) {
+				System.setProperty("webdriver.edge.driver", edgeDriverPath);
+			} else {
+				// Fallback to WebDriverManager to resolve the correct binary automatically
+				WebDriverManager.edgedriver().setup();
+			}
+
+			EdgeOptions edgeOptions = new EdgeOptions();
+
+			boolean headlessEdge = Boolean.parseBoolean(ConfigReader.getProperty("headless"));
+
+			if (headlessEdge) {
+				// use the newer headless flag for Chromium-based browsers
+				edgeOptions.addArguments("--headless=new");
+			}
+
+			// Prevent bot detection while maintaining performance
+			edgeOptions.addArguments("--disable-gpu");
+			edgeOptions.addArguments("--no-sandbox");
+			edgeOptions.addArguments("--disable-blink-features=AutomationControlled");
+			edgeOptions.addArguments("--disable-dev-shm-usage");
+
+			// Wait for document ready state before proceeding
+			edgeOptions.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+
+			webDriver = new EdgeDriver(edgeOptions);
+			break;
+
+		default:
+			throw new RuntimeException("Browser not supported: " + browser);
+		}
 
 			webDriver.manage().window().maximize();
 			webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));

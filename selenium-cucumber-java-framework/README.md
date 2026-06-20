@@ -49,6 +49,7 @@ The framework was designed to provide maintainable, scalable, and readable autom
 * Configuration-driven execution
 * Support for headless execution
 * Clean separation of framework components
+* Cross-browser testing (Chrome and Microsoft Edge) 
 
 ### Reporting
 
@@ -84,10 +85,11 @@ The framework was designed to provide maintainable, scalable, and readable autom
 
 Responsible for:
 
-* WebDriver initialization
-* Browser configuration
+* WebDriver initialization for Chrome and Microsoft Edge
+* Browser configuration via `ChromeOptions` and `EdgeOptions`
 * Thread-safe execution using `ThreadLocal<WebDriver>`
 * Driver lifecycle management
+* Automatic driver binary management via WebDriverManager
 
 ### Configuration Management
 
@@ -290,10 +292,28 @@ Execute the entire suite:
 mvn test
 ```
 
-Run with custom properties:
+Run with custom properties (Chrome):
+
+```powershell
+mvn test -Dbrowser=chrome -Dheadless=false
+```
+
+Run with Microsoft Edge:
+
+```powershell
+mvn test -Dbrowser=edge -Dheadless=false
+```
+
+Run with headless mode (Chrome):
 
 ```powershell
 mvn test -Dbrowser=chrome -Dheadless=true
+```
+
+Run with headless mode (Edge):
+
+```powershell
+mvn test -Dbrowser=edge -Dheadless=true
 ```
 
 Example configuration:
@@ -302,6 +322,21 @@ Example configuration:
 browser=chrome
 headless=false
 base.url=http://localhost:8080/parabank
+```
+
+Supported browsers: `chrome` (default), `edge`
+
+Cross-browser testing notes:
+
+* Run tests against different browsers by setting the `browser` property (for example `-Dbrowser=edge`).
+* The framework uses WebDriverManager by default to download the correct driver binary for the detected browser version.
+* To use a local Edge driver instead of WebDriverManager, set the `edge.driver.path` property to the full path of your `msedgedriver.exe` (for example `edge.driver.path=C:/WebDrivers/edgedriver/msedgedriver.exe`).
+* Example commands:
+
+```powershell
+mvn test -Dbrowser=edge -Dheadless=false
+# or with a local Edge driver path
+mvn test -Dbrowser=edge -Dedge.driver.path="C:\\WebDrivers\\edgedriver\\msedgedriver.exe" -Dheadless=false
 ```
 
 ---
