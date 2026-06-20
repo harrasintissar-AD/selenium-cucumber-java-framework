@@ -316,6 +316,21 @@ Run with headless mode (Edge):
 mvn test -Dbrowser=edge -Dheadless=true
 ```
 
+Environment profiles
+
+You can run the test suite against environment-specific property files using the `env` system property. The default environment is `dev`.
+
+```powershell
+# default (dev)
+mvn test
+
+# run against QA
+mvn test -Denv=qa
+
+# run against Prod
+mvn test -Denv=prod
+```
+
 Example configuration:
 
 ```properties
