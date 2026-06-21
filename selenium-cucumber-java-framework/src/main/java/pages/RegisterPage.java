@@ -29,6 +29,14 @@ public class RegisterPage {
 	private final By registrationSuccessMessage = By
 			.xpath("//p[contains(text(),'Your account was created successfully')]");
 
+	private final By firstNameError = By.id("customer.firstName.errors");
+
+	private final By lastNameError = By.id("customer.lastName.errors");
+
+	private final By addressError = By.id("customer.address.street.errors");
+
+	private final By usernameError = By.id("customer.username.errors");
+
 	public void openRegister() {
 		driver.findElement(registerLink).click();
 	}
@@ -47,6 +55,31 @@ public class RegisterPage {
 		driver.findElement(password).sendKeys(pass);
 		driver.findElement(confirmPassword).sendKeys(pass);
 	}
+
+	public void registerWithData(
+			String firstNameValue,
+			String lastNameValue,
+			String addressValue,
+			String cityValue,
+			String stateValue,
+			String zipCodeValue,
+			String ssnValue,
+			String usernameValue,
+			String passwordValue,
+			String confirmPasswordValue) {
+
+		driver.findElement(firstName).sendKeys(firstNameValue);
+		driver.findElement(lastName).sendKeys(lastNameValue);
+		driver.findElement(address).sendKeys(addressValue);
+		driver.findElement(city).sendKeys(cityValue);
+		driver.findElement(state).sendKeys(stateValue);
+		driver.findElement(zipCode).sendKeys(zipCodeValue);
+		driver.findElement(ssn).sendKeys(ssnValue);
+
+		driver.findElement(username).sendKeys(usernameValue);
+		driver.findElement(password).sendKeys(passwordValue);
+		driver.findElement(confirmPassword).sendKeys(confirmPasswordValue);
+	}
 	
 	public void registerBtn() {
 		driver.findElement(registerBtn).click();
@@ -61,5 +94,17 @@ public class RegisterPage {
 	public WebElement getRegistrationSuccessMessageElement() {
 		WebElement messageElement = driver.findElement(registrationSuccessMessage);
 	    return messageElement;
+	}
+
+	public String getValidationMessage(String message) {
+
+		By locator = By.xpath("//span[@class='error' and normalize-space()='" + message + "']");
+
+		return driver.findElement(locator).getText();
+	}
+
+	public WebElement getValidationMessageElement(String message) {
+		By locator = By.xpath("//span[@class='error' and normalize-space()='" + message + "']");
+		return driver.findElement(locator);
 	}
 }

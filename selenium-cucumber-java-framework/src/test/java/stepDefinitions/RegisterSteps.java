@@ -1,7 +1,9 @@
 package stepDefinitions;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.*;
 
+import java.util.Map;
 import java.util.Random;
 
 import org.openqa.selenium.WebDriver;
@@ -83,5 +85,39 @@ public class RegisterSteps {
 		System.out.println("User logged out successfully");
 
 		Assert.assertTrue(loginPage.isAtLoginPage());
+	}
+
+	@Then("the registration validation message {string} should be displayed")
+	public void verifyValidationMessage(String expectedMessage) {
+
+		HighlightUtil.highlightElement(DriverFactory.getDriver(), registerPage.getValidationMessageElement(expectedMessage));
+		Assert.assertEquals(registerPage.getValidationMessage(expectedMessage), expectedMessage);
+	}
+
+	@When("the customer registers with invalid data:")
+	public void customerRegistersWithInvalidData(DataTable dataTable) {
+
+		Map<String, String> data =
+				dataTable.asMap(String.class, String.class);
+
+		registerPage.openRegister();
+		registerPage.registerWithData(
+				cleanValue(data.get("firstName")),
+				cleanValue(data.get("lastName")),
+				cleanValue(data.get("address")),
+				cleanValue(data.get("city")),
+				cleanValue(data.get("state")),
+				cleanValue(data.get("zipCode")),
+				cleanValue(data.get("ssn")),
+				cleanValue(data.get("username")),
+				cleanValue(data.get("password")),
+				cleanValue(data.get("confirmPassword")));
+	}
+
+	private String cleanValue(String value) {
+		if (value == null || value.equalsIgnoreCase("[empty]")) {
+			return "";
+		}
+		return value;
 	}
 }
