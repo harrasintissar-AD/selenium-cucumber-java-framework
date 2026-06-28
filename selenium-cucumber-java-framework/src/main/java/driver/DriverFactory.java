@@ -15,11 +15,19 @@ import java.time.Duration;
 /**
  * Thread-safe singleton for managing WebDriver instances.
  * Uses ThreadLocal to support parallel test execution.
+ *
+ * Each thread gets its own isolated WebDriver instance:
+ * - Thread-1 calls getDriver() → gets Driver-1
+ * - Thread-2 calls getDriver() → gets Driver-2
+ *
+ * This design prevents driver conflicts in parallel scenarios while
+ * maintaining the singleton pattern per thread.
  */
 public class DriverFactory {
 
 	private static DriverFactory instance = null;
 	// ThreadLocal ensures each thread has its own WebDriver instance
+	// This is critical for parallel test execution safety
 	private static final ThreadLocal<WebDriver> driver = new ThreadLocal<>();
 
 	private DriverFactory() {
@@ -133,6 +141,7 @@ public class DriverFactory {
 
 	/**
 	 * Quits WebDriver and removes from ThreadLocal to prevent memory leaks.
+	 * Should be called in @After hook or @AfterMethod for each test.
 	 */
 	public static void quitDriver() {
 		if (driver.get() != null) {

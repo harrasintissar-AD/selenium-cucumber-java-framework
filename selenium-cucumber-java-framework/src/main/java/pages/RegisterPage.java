@@ -12,20 +12,21 @@ public class RegisterPage {
 		this.driver = driver;
 	}
 
-	private By registerLink = By.linkText("Register");
-	private By firstName = By.id("customer.firstName");
-	private By lastName = By.id("customer.lastName");
-	private By address = By.id("customer.address.street");
-	private By city = By.id("customer.address.city");
-	private By state = By.id("customer.address.state");
-	private By zipCode = By.id("customer.address.zipCode");
-	private By ssn = By.id("customer.ssn");
+	private final By registerLink = By.linkText("Register");
+	private final By firstName = By.id("customer.firstName");
+	private final By lastName = By.id("customer.lastName");
+	private final By address = By.id("customer.address.street");
+	private final By city = By.id("customer.address.city");
+	private final By state = By.id("customer.address.state");
+	private final By zipCode = By.id("customer.address.zipCode");
+	private final By ssn = By.id("customer.ssn");
 
-	private By username = By.id("customer.username");
-	private By password = By.id("customer.password");
-	private By confirmPassword = By.id("repeatedPassword");
+	private final By username = By.id("customer.username");
+	private final By password = By.id("customer.password");
+	private final By confirmPassword = By.id("repeatedPassword");
+	private final By logoutButton = By.linkText("Log Out");
 
-	private By registerBtn = By.xpath("//input[@value='Register']");
+	private final By registerBtn = By.xpath("//input[@value='Register']");
 	private final By registrationSuccessMessage = By
 			.xpath("//p[contains(text(),'Your account was created successfully')]");
 
@@ -106,5 +107,10 @@ public class RegisterPage {
 	public WebElement getValidationMessageElement(String message) {
 		By locator = By.xpath("//span[@class='error' and normalize-space()='" + message + "']");
 		return driver.findElement(locator);
+	}
+
+	public void clickLogout() {
+
+		driver.findElement(logoutButton).click();
 	}
 }

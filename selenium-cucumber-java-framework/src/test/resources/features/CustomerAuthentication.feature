@@ -9,7 +9,6 @@ Feature:  Customer Authentication
     Then user should see registration successful message
     Then user should be logged out successfully
 
-
   Scenario: Customer logs in with valid credentials
 
     Given user is on Parabank login page

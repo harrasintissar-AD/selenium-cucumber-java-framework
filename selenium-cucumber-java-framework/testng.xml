@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<!--
+  TestNG Configuration for Parallel Execution
+
+  This suite file configures TestNG to run Cucumber scenarios in parallel.
+  Each thread gets its own isolated WebDriver instance and report context.
+
+  Parallel execution modes:
+  - parallel="tests": runs test tags in parallel
+  - parallel="classes": runs test classes in parallel
+  - parallel="methods": runs test methods in parallel
+  - thread-count: number of threads to use
+
+  For Cucumber with TestNG, using parallel="methods" with thread-count
+  provides the best balance of concurrency and resource efficiency.
+-->
+<suite name="Selenium Cucumber Parallel Suite" parallel="methods" thread-count="4" verbose="2">
+
+	<!-- Main test runner for Cucumber scenarios -->
+	<test name="Cucumber Scenarios">
+		<!-- Include the TestRunner class which extends AbstractTestNGCucumberTests -->
+		<classes>
+			<class name="runners.TestRunner" />
+		</classes>
+	</test>
+
+	<!-- Optional: Add other test runners (LoginTest, SmokeTest) if needed -->
+	<!--
+	<test name="Login Tests">
+		<classes>
+			<class name="runners.LoginTest" />
+		</classes>
+	</test>
+
+	<test name="Smoke Tests">
+		<classes>
+			<class name="runners.SmokeTest" />
+		</classes>
+	</test>
+	-->
+
+</suite>
+

@@ -2,27 +2,42 @@ package stepDefinitions;
 
 import driver.DriverFactory;
 import io.cucumber.java.en.*;
+import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import pages.LoginPage;
+import pages.RegisterPage;
 import utils.ConfigReader;
 import utils.HighlightUtil;
 import utils.TestUserStorage;
 
 public class LoginSteps {
 
-    private LoginPage loginPage = new LoginPage(DriverFactory.getDriver());
+    private LoginPage loginPage;
+    private RegisterPage registerPage;
+
+    public String username;
+    public String password;
 
     @Given("user is on Parabank login page")
     public void userIsOnLoginPage() {
 
         DriverFactory.getDriver().get(ConfigReader.getProperty("base.url"));
+        loginPage = new LoginPage(DriverFactory.getDriver());
+        registerPage = new RegisterPage(DriverFactory.getDriver());
     }
 
     @When("user enters valid credentials")
     public void userEntersValidCredentials() {
 
-        System.out.println("Login Username: " + TestUserStorage.getUsername());
-        loginPage.login(TestUserStorage.getUsername(), TestUserStorage.getPassword());
+        registerPage.openRegister();
+        username = "user" + new java.util.Random().nextInt(900);
+        password = "Pass123!";
+        registerPage.register(username, password);
+        System.out.println("Login Username: " + username);
+        System.out.println("Login Password: " + password);
+        registerPage.registerBtn();
+        registerPage.clickLogout();
+        loginPage.login(username, password);
     }
 
     @And("user clicks on login button")

@@ -1,27 +1,31 @@
 package hooks;
 
 import java.io.File;
+import java.util.Map;
 
+import api.RegistrationApi;
 import driver.DriverFactory;
 import io.cucumber.java.After;
-import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.java.Scenario;
 import reports.ReportManager;
 import utils.ConfigReader;
-import utils.ScreenshotUtil;
+import utils.TestUserStorage;
 
 /**
  * Cucumber hooks for test setup and teardown.
+ *
+ * Thread-safe implementation for parallel test execution:
+ * - Each scenario gets its own WebDriver instance via ThreadLocal
+ * - Thread-local data (reports, user storage) is properly cleaned up
+ * - Supports both sequential and parallel execution without conflicts
  *
  * Execution order:
  * @BeforeAll (once), @Before (each scenario), @After (each scenario)
  */
 public class Hooks {
 
-	private int stepCounter = 1;
-	private Scenario currentScenario;
 
 	/**
 	 * One-time cleanup - runs once before any scenario.
@@ -50,6 +54,7 @@ public class Hooks {
 	/**
 	 * Per-scenario setup - runs before each scenario.
 	 * Initializes browser and report for this scenario.
+	 * Thread-safe: each thread gets its own WebDriver and report context.
 	 *
 	 * @param scenario Cucumber scenario object
 	 */
@@ -60,9 +65,6 @@ public class Hooks {
 
 		DriverFactory.getDriver().get(ConfigReader.getProperty("base.url"));
 
-		this.currentScenario = scenario;
-
-		stepCounter = 1;
 
 		ReportManager.startScenario(scenario.getName());
 	}
@@ -70,6 +72,7 @@ public class Hooks {
 	/**
 	 * Per-scenario teardown - runs after each scenario.
 	 * Finalizes report with pass/fail status.
+	 * Cleans up thread-local resources to prevent memory leaks in parallel execution.
 	 *
 	 * @param scenario Cucumber scenario object
 	 */
@@ -80,7 +83,18 @@ public class Hooks {
 
 		ReportManager.finishScenario(scenario.getName(), status);
 
-		// Uncomment to close browser after each scenario (useful for sequential tests)
+		// Clear thread-local test user storage to prevent data leaks in parallel scenarios
+		TestUserStorage.clear();
+
 		// DriverFactory.quitDriver();
 	}
+
+	/*@Before("@debug")
+	public void createUserForLogin() {
+
+		Map<String, String> credentials = RegistrationApi.registerUser();
+
+		TestUserStorage.setUsername(credentials.get("username"));
+		TestUserStorage.setPassword(credentials.get("password"));
+	}*/
 }

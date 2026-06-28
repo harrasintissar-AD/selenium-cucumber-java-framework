@@ -7,12 +7,16 @@ import java.io.IOException;
 /**
  * Generates HTML execution reports with embedded base64 screenshots.
  * Creates one report per scenario with all steps captured as images.
+ *
+ * Thread-safe implementation using ThreadLocal to support parallel test execution.
+ * Each thread maintains its own report context, preventing data leaks in parallel scenarios.
  */
 public class ReportManager {
 
 	private static final String REPORT_FOLDER = "target/execution-report/";
 
-	private static StringBuilder htmlContent;
+	// ThreadLocal ensures each thread has its own report being built
+	private static final ThreadLocal<StringBuilder> htmlContent = new ThreadLocal<>();
 
 	/**
 	 * Deletes all old reports and creates fresh report directory.
@@ -45,9 +49,9 @@ public class ReportManager {
 	 */
 	public static void startScenario(String scenarioName) {
 
-		htmlContent = new StringBuilder();
+		StringBuilder content = new StringBuilder();
 
-		htmlContent.append("""
+		content.append("""
 								<html>
 								<head>
 								    <title>Scenario Report</title>
@@ -88,7 +92,10 @@ public class ReportManager {
 								<body>
 								""");
 
-		htmlContent.append("<h1>Scenario: " + scenarioName + "</h1>");
+		content.append("<h1>Scenario: " + scenarioName + "</h1>");
+
+		// Store this thread's report in ThreadLocal
+		htmlContent.set(content);
 	}
 
 	/**
@@ -100,6 +107,13 @@ public class ReportManager {
 	 */
 	public static void addStepScreenshot(String stepName, String imagePath) {
 
+		StringBuilder content = htmlContent.get();
+
+		if (content == null) {
+			System.err.println("Warning: Report not initialized. Call startScenario() first.");
+			return;
+		}
+
 		try {
 
 			File imageFile = new File(imagePath);
@@ -107,19 +121,19 @@ public class ReportManager {
 			byte[] imageBytes = java.nio.file.Files.readAllBytes(imageFile.toPath());
 			String base64Image = java.util.Base64.getEncoder().encodeToString(imageBytes);
 
-			htmlContent.append("<div class='step'>");
+			content.append("<div class='step'>");
 
-			htmlContent.append("<h3 class='step-title'>").append(stepName).append("</h3>");
+			content.append("<h3 class='step-title'>").append(stepName).append("</h3>");
 
-			htmlContent.append("<div class='image-container'>");
+			content.append("<div class='image-container'>");
 
 			// Data URI allows embedding image directly without external file reference
-			htmlContent.append("<img style='max-width:100%; height:auto;' src='data:image/png;base64,")
+			content.append("<img style='max-width:100%; height:auto;' src='data:image/png;base64,")
 					.append(base64Image).append("'/>");
 
-			htmlContent.append("</div>");
+			content.append("</div>");
 
-			htmlContent.append("</div>");
+			content.append("</div>");
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -129,26 +143,37 @@ public class ReportManager {
 	/**
 	 * Finalizes report and saves to HTML file.
 	 * Call once per scenario in @After hook.
+	 * Automatically cleans up ThreadLocal to prevent memory leaks.
 	 *
 	 * @param scenarioName scenario name (used for filename)
 	 * @param status "PASS" or "FAIL"
 	 */
 	public static void finishScenario(String scenarioName, String status) {
 
-		htmlContent.append("<h3>Status: " + status + "</h3>");
+		StringBuilder content = htmlContent.get();
 
-		htmlContent.append("</body></html>");
+		if (content == null) {
+			System.err.println("Warning: Report not initialized for scenario: " + scenarioName);
+			return;
+		}
+
+		content.append("<h3>Status: " + status + "</h3>");
+
+		content.append("</body></html>");
 
 		try {
 
 			FileWriter writer = new FileWriter(REPORT_FOLDER + scenarioName.replace(" ", "_") + ".html");
 
-			writer.write(htmlContent.toString());
+			writer.write(content.toString());
 
 			writer.close();
 
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			// Critical: cleanup ThreadLocal to prevent memory leaks in thread pools
+			htmlContent.remove();
 		}
 	}
 }
