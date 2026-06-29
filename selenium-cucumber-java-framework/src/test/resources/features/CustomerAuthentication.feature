@@ -1,6 +1,5 @@
 Feature:  Customer Authentication
 
-
   Scenario: Customer successfully registers a new account
    
     Given user opens ParaBank application
